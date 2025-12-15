@@ -13,7 +13,23 @@
 
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: linear-gradient(
+                135deg,
+                #ff0018 0%,
+                #ff0018 16.66%,
+                #ffa52c 16.66%,
+                #ffa52c 33.32%,
+                #ffff41 33.32%,
+                #ffff41 49.98%,
+                #008018 49.98%,
+                #008018 66.64%,
+                #0000f9 66.64%,
+                #0000f9 83.3%,
+                #86007d 83.3%,
+                #86007d 100%
+            );
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -22,21 +38,74 @@
             padding: 20px;
         }
 
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         h1 {
-            color: #e0e0e0;
-            margin-bottom: 40px;
-            font-weight: 300;
-            font-size: 2.5rem;
+            font-size: 4rem;
+            font-weight: 800;
             text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(
+                90deg,
+                #ff0018,
+                #ffa52c,
+                #ffff41,
+                #008018,
+                #0000f9,
+                #86007d,
+                #ff0018
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbowText 3s linear infinite;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+
+        h1::before {
+            content: '🏳️‍🌈';
+            position: absolute;
+            left: -80px;
+            animation: wave 1s ease-in-out infinite;
+        }
+
+        h1::after {
+            content: '🏳️‍🌈';
+            position: absolute;
+            right: -80px;
+            animation: wave 1s ease-in-out infinite reverse;
+        }
+
+        @keyframes rainbowText {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
         }
 
         .video-container {
             position: relative;
             width: 100%;
             max-width: 1400px;
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            box-shadow: 
+                0 0 0 4px #ff0018,
+                0 0 0 8px #ffa52c,
+                0 0 0 12px #ffff41,
+                0 0 0 16px #008018,
+                0 0 0 20px #0000f9,
+                0 0 0 24px #86007d,
+                0 30px 60px rgba(0, 0, 0, 0.4);
             background: #000;
         }
 
@@ -44,11 +113,40 @@
             width: 100%;
             display: block;
         }
+
+        .sparkles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: sparkle 4s linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes sparkle {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) scale(1); opacity: 0; }
+        }
     </style>
 </head>
 <body>
-    <h1>safonov.gay</h1>
+    <div class="sparkles" id="sparkles"></div>
 
+    <h1>safonov.gay</h1>
+    
     <div class="video-container">
         <video id="videoPlayer" loop muted autoplay playsinline></video>
     </div>
@@ -61,6 +159,20 @@
         const video = document.getElementById('videoPlayer');
         video.src = VIDEO_PATH;
         video.addEventListener('ended', () => video.play());
+
+        // Создаём блестящие частицы
+        const colors = ['#ff0018', '#ffa52c', '#ffff41', '#008018', '#0000f9', '#86007d'];
+        const sparklesContainer = document.getElementById('sparkles');
+
+        for (let i = 0; i < 50; i++) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            sparkle.style.animationDelay = Math.random() * 4 + 's';
+            sparkle.style.animationDuration = (3 + Math.random() * 3) + 's';
+            sparklesContainer.appendChild(sparkle);
+        }
     </script>
 </body>
 </html>
